@@ -28,8 +28,8 @@ No effort has been made to prepare this solution for a production licensing scen
 - Generally, deploy each one as an Azure VM by running the following from within their folder (you will be prompted you for and admin username and password for the VM you are creating):
 
 ```powershell
+terraform init; #Run this once in the folder.
 az login; #will prompt you to log into Azure Portal. Resources will be created in that account's selected subscription.
-terraform init;
 terraform apply;
 ```
 
@@ -50,8 +50,15 @@ terraform destroy;
 This version lets you specify the username and password in a popup.
 
 ```powershell
+az login; #will prompt you to log into Azure Portal. Resources will be created in that account's selected subscription.
 $cred = get-credential; #Specify your username and password in the popup
 terraform apply -var-file="terraform.tfvars"  -var "vm_username=$($cred.UserName)" -var "vm_password=$($cred.GetNetworkCredential().Password)";
+
+#connect with this. In the popup, switch to other user and put in the username and password you specified:
+mstsc.exe /v:$(terraform output --raw vmIP) /span;
+
+#later...
+terraform apply -var-file="terraform.tfvars"  -var "vm_username=$($cred.UserName)" -var "vm_password=$($cred.GetNetworkCredential().Password)" --destroy;
 ```
 
 ## Configuration

@@ -9,6 +9,20 @@ The azure_virtual_machine_extension, CustomScriptExtension we are using is very 
 ## Security
 This sample also included IP-limited access, so random IPs on the internet cannot talk to your computer.
 
+## Provisioning
+```powershell
+az login; #will prompt you to log into Azure Portal. Resources will be created in that account's selected subscription.
+$myIP = '?.?.?.?' ; #Google: What is my IP, put the result there.
+$cred = get-credential; #Specify your username and password in the popup
+terraform apply -var-file="terraform.tfvars"  -var "vm_username=$($cred.UserName)" -var "vm_password=$($cred.GetNetworkCredential().Password)" -var "allowed_IP=$($myIP)" ;
+
+#connect with this. In the popup, switch to other user and put in the username and password you specified:
+mstsc.exe /v:$(terraform output --raw vmIP) /span;
+
+#later...
+terraform apply -var-file="terraform.tfvars"  -var "vm_username=$($cred.UserName)" -var "vm_password=$($cred.GetNetworkCredential().Password)" -var "allowed_IP=$($myIP)" --destroy;
+```
+
 ## Connecting
 To connect to the VM after terraform creates it, we use New-PSSession with a session option to skip the Certificate Authority Check (because we are self-signing it). We CANNOT connect without a certificate, but unless we don't check that certificate, the SSL connection fails. And we are using SSL because we don't like the idea of people snooping on our packets. In fact, we only allow the encrypted PS Remoting port, 5986, to be accessed; we don't expose the unencrypted port for PS remoting.
 
