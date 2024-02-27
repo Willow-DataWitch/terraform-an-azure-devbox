@@ -23,15 +23,14 @@ No effort has been made to prepare this solution for a production licensing scen
 
 ## Usage
 
-- Deploy the Azure VM by running the following from within this cloned repository (it will prompt you for and admin username and password for the VM you are creating):
+- The folders in this repository each contain slightly different server setups.
+- Navigate to one of the folders at the command line and check their readmes.
+- Generally, deploy each one as an Azure VM by running the following from within their folder (you will be prompted you for and admin username and password for the VM you are creating):
 
 ```powershell
 az login; #will prompt you to log into Azure Portal. Resources will be created in that account's selected subscription.
 terraform init;
-
-terraform apply -var-file="terraform.tfvars"; #This is the SQL SERVER 2019 Developer Edition version. In fact, you don't even need to specify the default tfvars file, so this is equivalent: terraform apply;
-
-#terraform apply -var-file="terraform_Alternate_Windows11.tfvars"; #Run this line instead for a plain windows 11 VM.
+terraform apply;
 ```
 
 - Setting up the VM takes a few minutes, and terraform will keep you apprised of its progress.
